@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Board - Review Queue</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header" role="banner">
+    <div class="header-content">
+        <h1 class="header-title">Signal Board</h1>
+        <div class="header-actions">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                🌓
+            </button>
+            <button id="refresh-btn" class="btn btn-secondary" aria-label="Refresh queue data">
+                ↻ Refresh
+            </button>
+            <button id="density-btn" class="btn btn-secondary" aria-label="Toggle density mode">
+                ⊞ Density
+            </button>
+        </div>
+    </div>
+</header>
+        <!-- Main Content -->
+        <main id="main-content" class="main-content">
+            <!-- Toolbar -->
+            <div class="toolbar" role="toolbar" aria-label="Queue controls">
+                <div class="search-container">
+                    <label for="search-input" class="sr-only">Search signals</label>
+                    <input 
+                        type="search" 
+                        id="search-input" 
+                        class="search-input" 
+                        placeholder="Search signals... (Press '/' to focus)"
+                        autocomplete="off"
+                    >
+                    <span class="search-shortcut">/</span>
+                </div>
+                
+                <div class="filter-sort-controls">
+                    <div class="filter-group">
+                        <label for="status-filter" class="filter-label">Status</label>
+                        <select id="status-filter" class="filter-select" multiple size="1">
+                            <option value="">All Status</option>
+                            <option value="new">New</option>
+                            <option value="reviewing">Reviewing</option>
+                            <option value="reviewed">Reviewed</option>
+                            <option value="escalated">Escalated</option>
+                            <option value="snoozed">Snoozed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="priority-filter" class="filter-label">Priority</label>
+                        <select id="priority-filter" class="filter-select" multiple size="1">
+                            <option value="">All Priorities</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="source-filter" class="filter-label">Source</label>
+                        <select id="source-filter" class="filter-select" multiple size="1">
+                            <option value="">All Sources</option>
+                            <option value="customer-feedback">Customer Feedback</option>
+                            <option value="support-ticket">Support Ticket</option>
+                            <option value="social-media">Social Media</option>
+                            <option value="bug-report">Bug Report</option>
+                            <option value="feature-request">Feature Request</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sort-select" class="filter-label">Sort By</label>
+                        <select id="sort-select" class="filter-select">
+                            <option value="createdAt-desc">Newest First</option>
+                            <option value="createdAt-asc">Oldest First</option>
+                            <option value="priority-desc">Highest Priority</option>
+                            <option value="priority-asc">Lowest Priority</option>
+                            <option value="score-desc">Highest Score</option>
+                            <option value="score-asc">Lowest Score</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="active-filters" id="active-filters" aria-live="polite"></div>
+            </div>
+
+            <!-- Queue List Container -->
+            <div id="queue-container" role="region" aria-label="Signal queue">
+                <!-- Loading State -->
+                <div id="loading-state" class="state-container" aria-busy="true">
+                    <div class="loading-spinner"></div>
+                    <p>Loading signals...</p>
+                </div>
+
+                <!-- Error State (hidden by default) -->
+                <div id="error-state" class="state-container hidden" role="alert">
+                    <div class="error-icon">⚠️</div>
+                    <h2>Failed to load signals</h2>
+                    <p id="error-message"></p>
+                    <button class="btn btn-primary" onclick="window.app.retry()">Retry</button>
+                </div>
+
+                <!-- Empty State (hidden by default) -->
+                <div id="empty-state" class="state-container hidden">
+                    <div class="empty-icon">📭</div>
+                    <h2>No signals found</h2>
+                    <p>Try adjusting your filters or search terms</p>
+                    <button class="btn btn-secondary" onclick="window.app.clearFilters()">Clear Filters</button>
+                </div>
+
+                <!-- Queue List -->
+                <div id="queue-list" class="queue-list hidden" role="list" aria-label="Signal items"></div>
+            </div>
+        </main>
+
+        <!-- Detail Panel (Modal) -->
+        <div id="detail-panel" class="detail-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+            <div class="detail-panel">
+                <div class="detail-header">
+                    <h2 id="detail-title"></h2>
+                    <button class="btn-close" aria-label="Close detail panel" onclick="window.app.closeDetail()">✕</button>
+                </div>
+                <div id="detail-content" class="detail-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
